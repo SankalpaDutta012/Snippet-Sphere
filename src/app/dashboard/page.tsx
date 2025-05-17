@@ -14,12 +14,65 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { PlusCircle, Search, FileText, Info, LogOut, UserPlus, LogIn } from "lucide-react"; // Added LogIn for consistency
+import { PlusCircle, Search, FileText, Info, LogOut, UserPlus, LogIn, Loader2 } from "lucide-react"; // Added Loader2
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-provider";
 import Link from "next/link";
 import { ThemeToggleButton } from "@/components/theme-toggle-button";
 import { useRouter } from "next/navigation"; // For redirect
+
+const exampleSnippets: Omit<Snippet, 'id' | 'createdAt'>[] = [
+  {
+    title: "JavaScript Fetch GET Request",
+    description: "A simple example of using the Fetch API to make a GET request.",
+    code: `async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(\`HTTP error! status: \${response.status}\`);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
+fetchData('https://jsonplaceholder.typicode.com/todos/1');`,
+    tags: ["javascript", "fetch", "api", "async", "await"],
+    language: "javascript",
+  },
+  {
+    title: "Python List Comprehension",
+    description: "Squaring numbers in a list using Python's list comprehension.",
+    code: `numbers = [1, 2, 3, 4, 5]
+squared_numbers = [n**2 for n in numbers]
+print(squared_numbers)
+# Output: [1, 4, 9, 16, 25]`,
+    tags: ["python", "list-comprehension", "data-structures"],
+    language: "python",
+  },
+  {
+    title: "CSS Flexbox Centering",
+    description: "A common way to center an item within a container using Flexbox.",
+    code: `.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Or any specific height */
+  border: 1px solid #ccc; /* For visualization */
+}
+
+.item {
+  padding: 20px;
+  background-color: lightblue;
+}`,
+    tags: ["css", "flexbox", "layout", "centering"],
+    language: "css",
+  },
+];
+
 
 export default function DashboardPage() {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
@@ -38,8 +91,6 @@ export default function DashboardPage() {
   }, [currentUser, authLoading, router]);
   
   const getLocalStorageKey = () => {
-    // On dashboard, currentUser should always exist.
-    // Fallback to a generic key if somehow it's null, though auth check should prevent this.
     return currentUser ? `snippetSphereSnippets_${currentUser.id}` : "snippetSphereSnippets_INVALID_USER";
   };
   
@@ -56,27 +107,37 @@ export default function DashboardPage() {
         setSnippets(parsedSnippets);
       } catch (error) {
         console.error("Failed to parse snippets from localStorage", error);
-        setSnippets([]); // Fallback to empty for the logged-in user
+        // If parsing fails, it might be corrupted, initialize with examples or empty
+        const defaultSnips = exampleSnippets.map((s, index) => ({
+          ...s,
+          id: `example-${index}-${Date.now()}`,
+          createdAt: new Date(),
+        }));
+        setSnippets(defaultSnips);
       }
     } else {
-      setSnippets([]); // No snippets found for this user
+      // No snippets found for this user, load examples
+      const defaultSnips = exampleSnippets.map((s, index) => ({
+        ...s,
+        id: `example-${index}-${Date.now()}`,
+        createdAt: new Date(),
+      }));
+      setSnippets(defaultSnips);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading]);
 
   // Save snippets to localStorage
   useEffect(() => {
-    if (authLoading || !currentUser) return;
+    if (authLoading || !currentUser || snippets.length === 0) return; // Don't save if snippets is empty initially before examples load
     
     const storageKey = getLocalStorageKey();
-    // Always save, even if empty, to reflect the user's current state
     localStorage.setItem(storageKey, JSON.stringify(snippets));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snippets, currentUser, authLoading]);
 
   const handleAddOrUpdateSnippet = (data: { title: string; description?: string; code: string; tags?: string, language?: string }) => {
-    // currentUser is guaranteed by auth check
     const snippetTags = data.tags ? data.tags.split(",").map(tag => tag.trim()).filter(tag => tag) : [];
     
     if (editingSnippet) {
@@ -106,7 +167,6 @@ export default function DashboardPage() {
   };
 
   const handleDeleteSnippet = (id: string) => {
-    // currentUser is guaranteed
     const snippetToDelete = snippets.find(s => s.id === id);
     if (snippetToDelete) {
       setSnippets(prev => prev.filter(s => s.id !== id));
@@ -115,13 +175,11 @@ export default function DashboardPage() {
   };
 
   const handleEditSnippet = (snippet: Snippet) => {
-    // currentUser is guaranteed
     setEditingSnippet(snippet);
     setIsDialogOpen(true);
   };
 
   const openAddNewDialog = () => {
-    // currentUser is guaranteed
     setEditingSnippet(null);
     setIsDialogOpen(true);
   }
@@ -142,7 +200,6 @@ export default function DashboardPage() {
   }, [snippets, searchTerm]);
 
   if (authLoading || !currentUser) {
-    // Show loader or null while auth state is resolving or redirecting
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -161,7 +218,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggleButton />
-            {currentUser && ( // This will always be true here
+            {currentUser && ( 
               <>
                 <span className="text-sm text-muted-foreground hidden sm:inline">Hi, {currentUser.username}!</span>
                 <Button onClick={openAddNewDialog} variant="default" size="sm" className="shadow hover:shadow-md transition-shadow">
@@ -174,7 +231,7 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-         {currentUser && ( // Show Add Snippet button below header on small screens
+         {currentUser && ( 
             <div className="sm:hidden container mx-auto px-4 pb-3">
                  <Button onClick={openAddNewDialog} variant="default" className="w-full shadow hover:shadow-md transition-shadow">
                     <PlusCircle className="mr-2 h-5 w-5" /> Add New Snippet
@@ -185,8 +242,6 @@ export default function DashboardPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-8 sticky top-[calc(var(--header-height,6rem)+1rem)] z-30 bg-background/80 backdrop-blur-sm py-4 -mx-4 px-4">
-          {/* Calculate header height with JS if it's dynamic, or use a fixed known value if possible */}
-          {/* For now, using a CSS variable placeholder, assuming header height is roughly 6rem on small screens with the extra button row */}
           <style jsx global>{`
             :root {
               --header-height: ${currentUser && typeof window !== 'undefined' && window.innerWidth < 640 ? 'calc(4rem + 32px + 2rem + 1rem)' : 'calc(4rem + 1rem)'};
@@ -224,7 +279,7 @@ export default function DashboardPage() {
             <p className="text-muted-foreground">
               {searchTerm 
                 ? "No snippets match your search. Try different keywords!" 
-                : "It looks like you haven't saved any snippets yet. Click 'Add Snippet' to get started!"
+                : "It looks like you haven't saved any snippets yet, or no examples were loaded. Click 'Add Snippet' to get started!"
               }
             </p>
             {!searchTerm && (
@@ -247,7 +302,7 @@ export default function DashboardPage() {
               {editingSnippet ? "Update the details of your code snippet." : "Fill in the details to save your new code snippet."}
             </DialogDescription>
           </DialogHeader>
-          <div className="overflow-y-auto pr-2 -mr-4 py-1 flex-grow"> {/* Adjusted padding for scrollbar */}
+          <div className="overflow-y-auto pr-2 -mr-4 py-1 flex-grow"> 
             <SnippetForm 
               onSubmit={handleAddOrUpdateSnippet} 
               onCancel={() => {
@@ -267,22 +322,4 @@ export default function DashboardPage() {
   );
 }
 
-// Simple loader component
-function Loader2(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-  );
-}
+    
