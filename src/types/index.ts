@@ -9,4 +9,9 @@ export interface Snippet {
   language?: string; // Optional: for syntax highlighting or filtering in future
 }
 
-export interface
+// Added User type for authentication
+export interface User {
+  id: string;
+  username: string;
+  // Add other user-specific fields if needed, e.g., email
+}

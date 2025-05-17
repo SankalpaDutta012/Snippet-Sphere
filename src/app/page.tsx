@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -12,53 +13,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusCircle, Search, FileText, Info } from "lucide-react";
+import { PlusCircle, Search, FileText, Info, LogIn, LogOut, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth-provider";
+import Link from "next/link";
+import { ThemeToggleButton } from "@/components/theme-toggle-button";
 
-// Dummy data for initial state
-const initialSnippets: Snippet[] = [
+// Dummy data for initial state (for guests or if localStorage fails)
+const initialGuestSnippets: Snippet[] = [
   {
-    id: "1",
-    title: "React Counter Hook",
-    description: "A simple custom hook for managing a counter state in React.",
-    code: `import { useState, useCallback } from 'react';
-
-function useCounter(initialValue = 0) {
-  const [count, setCount] = useState(initialValue);
-  const increment = useCallback(() => setCount(c => c + 1), []);
-  const decrement = useCallback(() => setCount(c => c - 1), []);
-  const reset = useCallback(() => setCount(initialValue), [initialValue]);
-  return { count, increment, decrement, reset };
-}`,
-    tags: ["react", "hook", "counter", "javascript"],
-    createdAt: new Date("2023-10-01T10:00:00Z"),
+    id: "guest-1",
+    title: "Welcome Snippet",
+    description: "This is a default snippet visible to guests. Log in to save your own!",
+    code: `console.log("Hello, Guest!");`,
+    tags: ["welcome", "guest"],
+    createdAt: new Date("2023-01-01T10:00:00Z"),
     language: "javascript",
   },
-  {
-    id: "2",
-    title: "Python Dictionary Iteration",
-    description: "How to iterate over keys, values, and items in a Python dictionary.",
-    code: `my_dict = {'a': 1, 'b': 2, 'c': 3}
-
-# Iterate over keys
-for key in my_dict:
-    print(key)
-
-# Iterate over values
-for value in my_dict.values():
-    print(value)
-
-# Iterate over items (key-value pairs)
-for key, value in my_dict.items():
-    print(f"{key}: {value}")`,
-    tags: ["python", "dictionary", "iteration"],
-    createdAt: new Date("2023-10-05T14:30:00Z"),
-    language: "python",
-  },
 ];
-
 
 export default function HomePage() {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
@@ -66,35 +39,57 @@ export default function HomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingSnippet, setEditingSnippet] = useState<Snippet | null>(null);
   const { toast } = useToast();
+  const { currentUser, logout, loading } = useAuth();
+
+  const getLocalStorageKey = () => {
+    return currentUser ? `snippetSphereSnippets_${currentUser.id}` : "snippetSphereSnippets_guest";
+  };
   
   // Load snippets from localStorage on mount, or use initialSnippets
   useEffect(() => {
-    const storedSnippets = localStorage.getItem("snippetSphereSnippets");
+    if (loading) return; // Don't load snippets until auth state is resolved
+
+    const storageKey = getLocalStorageKey();
+    const storedSnippets = localStorage.getItem(storageKey);
+    
     if (storedSnippets) {
       try {
         const parsedSnippets = JSON.parse(storedSnippets).map((s: Snippet) => ({...s, createdAt: new Date(s.createdAt)}));
         setSnippets(parsedSnippets);
       } catch (error) {
         console.error("Failed to parse snippets from localStorage", error);
-        setSnippets(initialSnippets); // Fallback to initial data
+        setSnippets(currentUser ? [] : initialGuestSnippets); // Fallback
       }
     } else {
-      setSnippets(initialSnippets);
+      setSnippets(currentUser ? [] : initialGuestSnippets);
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, loading]); // Rerun when user or loading state changes
 
   // Save snippets to localStorage whenever they change
   useEffect(() => {
-    if (snippets.length > 0 || localStorage.getItem("snippetSphereSnippets")) { // Avoid writing initial empty array if nothing was stored
-      localStorage.setItem("snippetSphereSnippets", JSON.stringify(snippets));
+    if (loading) return;
+    // Avoid writing initial empty array if nothing was stored, unless user is logged in and has no snippets
+    const storageKey = getLocalStorageKey();
+    if (snippets.length > 0 || (currentUser && snippets.length === 0 && localStorage.getItem(storageKey))) { 
+      localStorage.setItem(storageKey, JSON.stringify(snippets));
+    } else if (!currentUser && snippets.length === 0 && !localStorage.getItem(storageKey)) {
+      // If guest and no snippets and nothing in local storage, don't write empty array
+      // This preserves initialGuestSnippets if user clears local storage manually
+    } else {
+      localStorage.setItem(storageKey, JSON.stringify(snippets));
     }
-  }, [snippets]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snippets, currentUser, loading]);
 
   const handleAddOrUpdateSnippet = (data: { title: string; description?: string; code: string; tags?: string, language?: string }) => {
+    if (!currentUser) {
+      toast({ title: "Login Required", description: "Please log in to save snippets.", variant: "destructive" });
+      return;
+    }
     const snippetTags = data.tags ? data.tags.split(",").map(tag => tag.trim()).filter(tag => tag) : [];
     
     if (editingSnippet) {
-      // Update existing snippet
       setSnippets(prev => 
         prev.map(s => 
           s.id === editingSnippet.id 
@@ -105,20 +100,20 @@ export default function HomePage() {
       toast({ title: "Snippet Updated", description: `"${data.title}" has been updated.`});
       setEditingSnippet(null);
     } else {
-      // Add new snippet
       const newSnippet: Snippet = {
         id: Date.now().toString(),
         ...data,
         tags: snippetTags,
         createdAt: new Date(),
       };
-      setSnippets(prev => [newSnippet, ...prev]); // Add to the beginning
+      setSnippets(prev => [newSnippet, ...prev]);
       toast({ title: "Snippet Saved", description: `"${data.title}" has been saved.`});
     }
     setIsDialogOpen(false);
   };
 
   const handleDeleteSnippet = (id: string) => {
+    if (!currentUser) return;
     const snippetToDelete = snippets.find(s => s.id === id);
     if (snippetToDelete) {
       setSnippets(prev => prev.filter(s => s.id !== id));
@@ -127,12 +122,17 @@ export default function HomePage() {
   };
 
   const handleEditSnippet = (snippet: Snippet) => {
+    if (!currentUser) return;
     setEditingSnippet(snippet);
     setIsDialogOpen(true);
   };
 
   const openAddNewDialog = () => {
-    setEditingSnippet(null); // Ensure we are in "add" mode
+    if (!currentUser) {
+      toast({ title: "Login Required", description: "Please log in to add a new snippet.", variant: "destructive" });
+      return;
+    }
+    setEditingSnippet(null);
     setIsDialogOpen(true);
   }
 
@@ -148,25 +148,56 @@ export default function HomePage() {
           (snippet.language && snippet.language.toLowerCase().includes(lowerSearchTerm))
         );
       })
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); // Sort by newest first
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }, [snippets, searchTerm]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center"><p>Loading application...</p></div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-card border-b shadow-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
           <div className="flex items-center space-x-2">
             <FileText className="h-8 w-8 text-primary" />
             <h1 className="text-3xl font-bold text-primary tracking-tight">Snippet Sphere</h1>
           </div>
-          <Button onClick={openAddNewDialog} variant="default" className="w-full sm:w-auto">
-            <PlusCircle className="mr-2 h-5 w-5" /> Add New Snippet
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggleButton />
+            {currentUser ? (
+              <>
+                <span className="text-sm text-muted-foreground hidden sm:inline">Hi, {currentUser.username}!</span>
+                <Button onClick={openAddNewDialog} variant="default" size="sm">
+                  <PlusCircle className="mr-2 h-4 w-4" /> Add Snippet
+                </Button>
+                <Button onClick={logout} variant="outline" size="sm">
+                  <LogOut className="mr-2 h-4 w-4" /> Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login"><LogIn className="mr-2 h-4 w-4" /> Login</Link>
+                </Button>
+                <Button asChild variant="default" size="sm">
+                  <Link href="/signup"><UserPlus className="mr-2 h-4 w-4" /> Sign Up</Link>
+                </Button>
+              </>
+            )}
+          </div>
         </div>
+         {currentUser && ( // Show Add Snippet button below header on small screens when logged in
+            <div className="sm:hidden container mx-auto px-4 pb-3">
+                 <Button onClick={openAddNewDialog} variant="default" className="w-full">
+                    <PlusCircle className="mr-2 h-5 w-5" /> Add New Snippet
+                  </Button>
+            </div>
+          )}
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-8 sticky top-[calc(4rem+32px-1px)] sm:top-[calc(4rem+16px-1px)] z-30 bg-background py-4"> {/* Adjust top based on header height */}
+        <div className="mb-8 sticky top-[calc(4rem+32px-1px+2rem)] sm:top-[calc(4rem+1rem-1px)] z-30 bg-background py-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
@@ -188,17 +219,39 @@ export default function HomePage() {
         ) : (
           <div className="text-center py-12">
             <Info className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">No Snippets Found</h2>
+            <h2 className="text-2xl font-semibold mb-2">
+              {currentUser ? "No Snippets Yet" : "Welcome to Snippet Sphere!"}
+            </h2>
             <p className="text-muted-foreground">
-              {searchTerm ? "Try adjusting your search term." : "Get started by adding a new snippet!"}
+              {searchTerm 
+                ? "Try adjusting your search term." 
+                : currentUser
+                  ? "Get started by adding a new snippet!"
+                  : "Log in or sign up to save and manage your code snippets."
+              }
             </p>
+             {!currentUser && (
+                <div className="mt-6 flex justify-center gap-4">
+                    <Button asChild variant="default">
+                        <Link href="/login"><LogIn className="mr-2 h-4 w-4" /> Login</Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href="/signup"><UserPlus className="mr-2 h-4 w-4" /> Sign Up</Link>
+                    </Button>
+                </div>
+            )}
           </div>
         )}
       </main>
 
       <Dialog open={isDialogOpen} onOpenChange={(open) => {
+          if (!currentUser && open) {
+            setIsDialogOpen(false); // Prevent opening if not logged in
+            toast({ title: "Login Required", description: "Please log in to manage snippets.", variant: "destructive" });
+            return;
+          }
           setIsDialogOpen(open);
-          if (!open) setEditingSnippet(null); // Reset editing state when dialog closes
+          if (!open) setEditingSnippet(null);
         }}>
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
           <DialogHeader>
@@ -207,7 +260,7 @@ export default function HomePage() {
               {editingSnippet ? "Update the details of your code snippet." : "Fill in the details to save your new code snippet."}
             </DialogDescription>
           </DialogHeader>
-          <div className="overflow-y-auto pr-2 -mr-3 py-1 flex-grow"> {/* Custom scrollbar handling */}
+          <div className="overflow-y-auto pr-2 -mr-3 py-1 flex-grow">
             <SnippetForm 
               onSubmit={handleAddOrUpdateSnippet} 
               onCancel={() => {

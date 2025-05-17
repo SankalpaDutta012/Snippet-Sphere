@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,34 +13,34 @@ code, pre {
 
 @layer base {
   :root {
-    --background: 208 100% 97%; /* #F0F8FF - Very light, desaturated blue */
-    --foreground: 210 10% 23%; /* Darker text for readability on light bg */
+    --background: 0 0% 100%; /* Pure White */
+    --foreground: 224 71.4% 4.1%; /* Dark Blue/Black */
 
-    --muted: 210 40% 90%;
-    --muted-foreground: 210 10% 45%;
+    --muted: 220 14.3% 95.9%; /* Light Gray */
+    --muted-foreground: 220 8.9% 46.1%; /* Medium Gray */
 
-    --popover: 208 100% 97%;
-    --popover-foreground: 210 10% 23%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
 
-    --card: 208 100% 99%; /* Slightly off background for card definition */
-    --card-foreground: 210 10% 23%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
 
-    --border: 210 40% 80%;
-    --input: 210 40% 85%;
+    --border: 220 13% 91%; /* Light Gray Border */
+    --input: 220 13% 91%; /* Light Gray Input Background */
 
-    --primary: 210 40% 60%; /* #6699CC - Muted blue */
-    --primary-foreground: 210 100% 98%; /* Light text on primary */
+    --primary: 220.9 39.3% 46.3%; /* Muted Blue */
+    --primary-foreground: 210 20% 98%; /* Very Light Gray/White */
 
-    --secondary: 210 40% 80%;
-    --secondary-foreground: 210 10% 23%;
+    --secondary: 220 14.3% 95.9%; /* Light Gray */
+    --secondary-foreground: 224 71.4% 4.1%;
 
-    --accent: 33 100% 64%; /* #FFB347 - Warm orange */
-    --accent-foreground: 20 90% 15%; /* Darker text for orange accent */
-
+    --accent: 33 100% 64%; /* #FFB347 - Warm Orange (Existing) */
+    --accent-foreground: 20 90% 15%; /* Darker text for orange accent (Existing) */
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 210 40% 60%; /* Muted blue for rings */
+    --ring: 220.9 39.3% 46.3%; /* Muted Blue for rings */
 
     --radius: 0.5rem;
 
@@ -60,46 +61,43 @@ code, pre {
   }
 
   .dark {
-    /* For dark mode, we can invert or choose a different palette if specified.
-       Using a generic dark theme for now.
-    */
-    --background: 210 10% 10%;
-    --foreground: 210 40% 90%;
+    --background: 224 71.4% 4.1%; /* Dark Blue/Black */
+    --foreground: 210 20% 98%; /* Very Light Gray/White */
 
-    --muted: 210 10% 20%;
-    --muted-foreground: 210 40% 70%;
+    --muted: 215 27.9% 16.9%; /* Darker Gray */
+    --muted-foreground: 217.9 10.6% 64.9%; /* Lighter Medium Gray */
 
-    --popover: 210 10% 10%;
-    --popover-foreground: 210 40% 90%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
 
-    --card: 210 10% 15%;
-    --card-foreground: 210 40% 90%;
+    --card: 224 71.4% 5.5%; /* Slightly lighter than background for card definition */
+    --card-foreground: 210 20% 98%;
 
-    --border: 210 10% 30%;
-    --input: 210 10% 25%;
+    --border: 215 27.9% 16.9%; /* Darker Gray Border */
+    --input: 215 27.9% 16.9%; /* Darker Gray Input Background */
 
-    --primary: 210 40% 60%; /* #6699CC */
-    --primary-foreground: 210 100% 98%;
+    --primary: 210 20% 98%; /* Very Light Gray/White for primary elements in dark mode */
+    --primary-foreground: 224 71.4% 4.1%; /* Dark Blue/Black for text on primary */
+    
+    --secondary: 215 27.9% 16.9%; /* Darker Gray */
+    --secondary-foreground: 210 20% 98%;
 
-    --secondary: 210 10% 30%;
-    --secondary-foreground: 210 40% 90%;
+    --accent: 33 100% 64%; /* #FFB347 - Warm Orange (Existing, good contrast) */
+    --accent-foreground: 20 90% 15%; /* Darker text for orange accent (Existing, good contrast) */
 
-    --accent: 33 100% 64%; /* #FFB347 */
-    --accent-foreground: 20 90% 15%;
-
-    --destructive: 0 70% 50%;
+    --destructive: 0 62.8% 30.6%; /* Darker Red */
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 210 40% 60%;
-
-    --sidebar-background: 210 10% 12%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 210 40% 60%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --ring: 210 20% 98%; /* Light ring for dark mode */
+    
+    --sidebar-background: 224 71.4% 5.5%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 210 20% 98%;
+    --sidebar-primary-foreground: 224 71.4% 4.1%;
     --sidebar-accent: 33 100% 64%;
     --sidebar-accent-foreground: 20 90% 15%;
-    --sidebar-border: 210 10% 30%;
-    --sidebar-ring: 210 40% 60%;
+    --sidebar-border: 215 27.9% 16.9%;
+    --sidebar-ring: 210 20% 98%;
   }
 }
 
@@ -109,5 +107,7 @@ code, pre {
   }
   body {
     @apply bg-background text-foreground;
+    /* Smooth transition for color changes */
+    @apply transition-colors duration-200;
   }
 }
