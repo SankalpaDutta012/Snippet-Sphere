@@ -221,7 +221,7 @@ export default function DashboardPage() {
             {currentUser && ( 
               <>
                 <span className="text-sm text-muted-foreground hidden sm:inline">Hi, {currentUser.username}!</span>
-                <Button onClick={openAddNewDialog} variant="default" size="sm" className="shadow hover:shadow-md transition-shadow">
+                <Button onClick={openAddNewDialog} variant="default" size="sm" className="hidden sm:inline-flex shadow hover:shadow-md transition-shadow">
                   <PlusCircle className="mr-2 h-4 w-4" /> Add Snippet
                 </Button>
                 <Button onClick={logout} variant="outline" size="sm" className="shadow-sm hover:shadow transition-shadow">
