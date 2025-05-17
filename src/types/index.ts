@@ -1,3 +1,4 @@
+
 export interface Snippet {
   id: string;
   title: string;
@@ -7,3 +8,5 @@ export interface Snippet {
   createdAt: Date;
   language?: string; // Optional: for syntax highlighting or filtering in future
 }
+
+export interface
