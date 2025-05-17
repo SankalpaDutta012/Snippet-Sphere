@@ -2,13 +2,13 @@
 "use client";
 
 import type { User } from "@/types";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation"; // Added usePathname
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface AuthContextType {
   currentUser: User | null;
-  login: (username: string) => void; // Simplified mock login
-  signup: (username: string) => void; // Simplified mock signup
+  login: (username: string) => void;
+  signup: (username: string) => void;
   logout: () => void;
   loading: boolean;
 }
@@ -19,9 +19,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname(); // Get current path
 
   useEffect(() => {
-    // Check localStorage for a saved user session
     const storedUser = localStorage.getItem("snippetSphereUser");
     if (storedUser) {
       try {
@@ -35,25 +35,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (username: string) => {
-    // In a real app, this would involve an API call
-    const mockUser: User = { id: username, username }; // Use username as ID for mock
+    const mockUser: User = { id: username, username }; 
     localStorage.setItem("snippetSphereUser", JSON.stringify(mockUser));
     setCurrentUser(mockUser);
-    router.push("/"); // Redirect to home after login
+    router.push("/dashboard"); // Redirect to dashboard after login
   };
 
   const signup = (username: string) => {
-    // In a real app, this would involve an API call
     const mockUser: User = { id: username, username };
     localStorage.setItem("snippetSphereUser", JSON.stringify(mockUser));
     setCurrentUser(mockUser);
-    router.push("/"); // Redirect to home after signup
+    router.push("/dashboard"); // Redirect to dashboard after signup
   };
 
   const logout = () => {
     localStorage.removeItem("snippetSphereUser");
     setCurrentUser(null);
-    router.push("/"); // Redirect to home or login page after logout
+    // If logging out from dashboard, redirect to landing page. Otherwise, stay or go to landing.
+    if (pathname.startsWith("/dashboard")) {
+      router.push("/"); 
+    } else {
+      router.push("/"); // Default to landing page
+    }
   };
 
   return (
