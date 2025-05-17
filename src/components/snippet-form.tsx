@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Snippet } from "@/types";
+import { suggestTags, SuggestTagsInput } from "@/ai/flows/suggest-tags-flow";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Sparkles, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title too long"),
@@ -36,13 +39,16 @@ interface SnippetFormProps {
 }
 
 export default function SnippetForm({ onSubmit, onCancel, initialData }: SnippetFormProps) {
+  const [isSuggestingTags, setIsSuggestingTags] = useState(false);
+  const { toast } = useToast();
+
   const defaultValues = initialData 
     ? {
         title: initialData.title,
-        description: initialData.description,
+        description: initialData.description || "",
         code: initialData.code,
         tags: initialData.tags.join(", "),
-        language: initialData.language,
+        language: initialData.language || "",
       }
     : {
         title: "",
@@ -61,10 +67,10 @@ export default function SnippetForm({ onSubmit, onCancel, initialData }: Snippet
     if (initialData) {
       form.reset({
         title: initialData.title,
-        description: initialData.description,
+        description: initialData.description || "",
         code: initialData.code,
         tags: initialData.tags.join(", "),
-        language: initialData.language,
+        language: initialData.language || "",
       });
     } else {
       form.reset(defaultValues);
@@ -76,6 +82,55 @@ export default function SnippetForm({ onSubmit, onCancel, initialData }: Snippet
   const handleSubmit = (values: SnippetFormValues) => {
     onSubmit(values);
     form.reset();
+  };
+
+  const handleSuggestTags = async () => {
+    setIsSuggestingTags(true);
+    const { title, description, code } = form.getValues();
+    const currentTagsString = form.getValues("tags") || "";
+    const existingTagsArray = currentTagsString.split(",").map(t => t.trim()).filter(t => t);
+
+    if (!code.trim()) {
+      toast({
+        title: "Cannot suggest tags",
+        description: "Please provide some code before suggesting tags.",
+        variant: "destructive",
+      });
+      setIsSuggestingTags(false);
+      return;
+    }
+
+    try {
+      const aiInput: SuggestTagsInput = { title, code };
+      if (description) aiInput.description = description;
+      if (existingTagsArray.length > 0) aiInput.existingTags = existingTagsArray;
+      
+      const result = await suggestTags(aiInput);
+      
+      if (result.suggestedTags && result.suggestedTags.length > 0) {
+        const newTags = result.suggestedTags;
+        const combinedTagsSet = new Set([...existingTagsArray, ...newTags]);
+        form.setValue("tags", Array.from(combinedTagsSet).join(", "));
+        toast({
+          title: "Tags Suggested!",
+          description: "AI has added new tag suggestions.",
+        });
+      } else {
+        toast({
+          title: "No new tags suggested",
+          description: "AI couldn't find any new tags to suggest, or there was an issue.",
+        });
+      }
+    } catch (error) {
+      console.error("Error suggesting tags:", error);
+      toast({
+        title: "Error Suggesting Tags",
+        description: "An error occurred while trying to suggest tags. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSuggestingTags(false);
+    }
   };
 
   return (
@@ -139,16 +194,33 @@ export default function SnippetForm({ onSubmit, onCancel, initialData }: Snippet
           name="tags"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tags (Optional, comma-separated)</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Tags (Optional, comma-separated)</FormLabel>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleSuggestTags}
+                  disabled={isSuggestingTags}
+                  className="text-xs"
+                >
+                  {isSuggestingTags ? (
+                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-1 h-3 w-3 text-accent" />
+                  )}
+                  Suggest Tags
+                </Button>
+              </div>
               <FormControl>
                 <Input placeholder="e.g., react, hook, fetch, api" {...field} />
               </FormControl>
-              <FormDescription>Organize your snippets with relevant tags.</FormDescription>
+              <FormDescription>Organize your snippets with relevant tags. Click the button above to get AI suggestions.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end space-x-3">
+        <div className="flex justify-end space-x-3 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>

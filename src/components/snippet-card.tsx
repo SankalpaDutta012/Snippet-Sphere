@@ -2,11 +2,23 @@
 
 import type { Snippet } from "@/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { ClipboardCopy, Download, Trash2, Pencil } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 interface SnippetCardProps {
   snippet: Snippet;
@@ -36,7 +48,7 @@ export default function SnippetCard({ snippet, onDelete, onEdit }: SnippetCardPr
   };
 
   const handleExportAsTxt = () => {
-    const content = `Title: ${snippet.title}\nDescription: ${snippet.description}\nTags: ${snippet.tags.join(', ')}\nLanguage: ${snippet.language || 'N/A'}\n\nCode:\n${snippet.code}`;
+    const content = `Title: ${snippet.title}\nDescription: ${snippet.description || 'N/A'}\nTags: ${snippet.tags.join(', ')}\nLanguage: ${snippet.language || 'N/A'}\n\nCode:\n${snippet.code}`;
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -92,9 +104,31 @@ export default function SnippetCard({ snippet, onDelete, onEdit }: SnippetCardPr
           <Button variant="ghost" size="icon" onClick={() => onEdit(snippet)} aria-label="Edit snippet">
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => onDelete(snippet.id)} aria-label="Delete snippet" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Delete snippet" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the snippet
+                  "{snippet.title}".
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => onDelete(snippet.id)}
+                  className={cn(buttonVariants({ variant: "destructive" }))}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardFooter>
     </Card>
