@@ -1,5 +1,1 @@
-# Firebase Studio
-
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+Snippet Sphere is a collaborative platform for storing, sharing, and managing code snippets across teams or personal projects. It features syntax highlighting, tagging, and quick search for efficient code reuse and productivity.
