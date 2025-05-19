@@ -110,4 +110,32 @@ code, pre {
     /* Smooth transition for color changes */
     @apply transition-colors duration-200;
   }
+
+  /* === Begin Cursor Styling === */
+  /* Default cursor (e.g., for mobile) */
+  html {
+    @apply cursor-default;
+  }
+
+  /* Pointer cursor for desktop, with specific overrides */
+  @media (min-width: 768px) { /* Tailwind 'md' breakpoint is typically 768px */
+    html {
+      @apply cursor-pointer;
+    }
+
+    /* Ensure text input fields retain their text cursor */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="url"],
+    input:not([type]), /* Catches default input type which is text */
+    textarea,
+    [contenteditable="true"] {
+      @apply cursor-text;
+    }
+  }
+  /* === End Cursor Styling === */
 }
