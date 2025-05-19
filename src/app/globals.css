@@ -13,109 +13,89 @@ code, pre {
 
 @layer base {
   :root {
-    /* Comic Light Mode Theme */
-    --background: 40 100% 97%; /* Very light yellow, "aged paper" */
-    --foreground: 220 20% 15%; /* Very dark blue, "ink" */
+    /* Standard Light Mode Theme */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --muted: 40 80% 92%; /* Lighter yellow */
-    --muted-foreground: 220 15% 40%; /* Muted dark blue */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --popover: 0 0% 100%; /* White, like a comic panel */
-    --popover-foreground: 220 20% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%; /* White, like a comic panel */
-    --card-foreground: 220 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --border: 220 20% 25%; /* Dark blue border */
-    --input: 0 0% 100%; /* White input, dark border */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
 
-    --primary: 210 100% 50%; /* Bright comic blue */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 40 70% 85%; /* Pale yellow */
-    --secondary-foreground: 210 100% 30%; /* Darker blue for contrast */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 35 100% 55%; /* Bright comic orange/yellow */
-    --accent-foreground: 220 20% 15%; /* Dark ink text on accent */
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     
-    --destructive: 0 80% 55%; /* Classic comic red */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --ring: 210 100% 50%; /* Blue ring */
+    --ring: 214.3 31.8% 91.4%;
 
-    --radius: 0.25rem; /* Sharper corners for comic panels */
+    --radius: 0.5rem;
 
-    /* Comic Chart Colors - Light Mode */
-    --chart-1: 210 100% 50%; /* Blue */
-    --chart-2: 35 100% 55%;  /* Orange/Yellow */
-    --chart-3: 120 60% 45%; /* Green */
-    --chart-4: 300 70% 50%; /* Purple */
-    --chart-5: 0 80% 55%;   /* Red */
-
-    /* Comic Sidebar Colors - Light Mode */
-    --sidebar-background: 40 90% 95%;
-    --sidebar-foreground: 220 20% 20%;
-    --sidebar-primary: 210 100% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 35 100% 50%;
-    --sidebar-accent-foreground: 220 20% 10%;
-    --sidebar-border: 220 20% 30%;
-    --sidebar-ring: 210 100% 45%;
+    /* Standard Chart Colors - Light Mode */
+    --chart-1: 222.2 47.4% 11.2%; 
+    --chart-2: 0 84.2% 60.2%;   
+    --chart-3: 48 96.5% 53.1%;  
+    --chart-4: 142.1 76.2% 36.3%; 
+    --chart-5: 262.1 83.3% 57.8%; 
   }
 
   .dark {
-    /* Comic Dark Mode Theme */
-    --background: 220 20% 10%; /* Very dark blue, "night sky" */
-    --foreground: 40 100% 90%; /* Light yellow, "glowing text" */
+    /* Standard Dark Mode Theme */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --muted: 220 15% 20%; /* Darker muted blue */
-    --muted-foreground: 40 80% 70%; /* Muted light yellow */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --popover: 220 20% 12%;
-    --popover-foreground: 40 100% 90%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --card: 220 20% 12%; /* Slightly off-dark-blue for panels */
-    --card-foreground: 40 100% 90%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --border: 40 100% 70%; /* Light yellow border for contrast */
-    --input: 220 20% 12%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
 
-    --primary: 35 100% 55%; /* Orange/Yellow becomes primary for pop */
-    --primary-foreground: 220 20% 10%; /* Dark ink text on primary */
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
     
-    --secondary: 220 15% 25%; /* Another dark blue shade */
-    --secondary-foreground: 35 100% 70%; /* Lighter orange/yellow */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --accent: 210 100% 60%; /* Bright blue as accent */
-    --accent-foreground: 0 0% 100%; /* White text on blue */
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 70% 50%; /* Slightly deeper red */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
 
-    --ring: 35 100% 55%; /* Orange/Yellow ring */
-
-    /* Comic Chart Colors - Dark Mode (adjust for contrast if needed) */
-    --chart-1: 210 100% 60%; /* Brighter Blue */
-    --chart-2: 35 100% 65%;  /* Brighter Orange/Yellow */
-    --chart-3: 120 70% 55%; /* Brighter Green */
-    --chart-4: 300 80% 60%; /* Brighter Purple */
-    --chart-5: 0 90% 65%;   /* Brighter Red */
+    --ring: 217.2 32.6% 17.5%;
     
-    /* Comic Sidebar Colors - Dark Mode */
-    --sidebar-background: 220 20% 12%;
-    --sidebar-foreground: 40 90% 85%;
-    --sidebar-primary: 35 100% 60%;
-    --sidebar-primary-foreground: 220 20% 10%;
-    --sidebar-accent: 210 100% 55%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 40 100% 65%;
-    --sidebar-ring: 35 100% 60%;
+    /* Standard Chart Colors - Dark Mode */
+    --chart-1: 210 40% 98%; 
+    --chart-2: 0 72.2% 50.6%; 
+    --chart-3: 48 96.5% 53.1%;  
+    --chart-4: 142.1 76.2% 36.3%; 
+    --chart-5: 262.1 83.3% 57.8%; 
   }
 }
 
 @layer base {
   * {
-    @apply border-border border-[1.5px]; /* Thicker default border for comic "inked" style */
+    @apply border-border; 
   }
   body {
     @apply bg-background text-foreground;
@@ -129,15 +109,10 @@ code, pre {
     @apply cursor-default;
   }
 
-  /* Crosshair cursor for desktop, with specific overrides */
+  /* Pointer cursor for desktop, with specific overrides */
   @media (min-width: 768px) { /* Tailwind 'md' breakpoint is typically 768px */
-    html:not(.dark) {
-      /* Crosshair cursor with black stroke for light mode */
-      cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 6V26' stroke='black' stroke-width='2'/%3E%3Cpath d='M6 16H26' stroke='black' stroke-width='2'/%3E%3C/svg%3E") 16 16, auto;
-    }
-    html.dark {
-      /* Crosshair cursor with white stroke for dark mode */
-      cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 6V26' stroke='white' stroke-width='2'/%3E%3Cpath d='M6 16H26' stroke='white' stroke-width='2'/%3E%3C/svg%3E") 16 16, auto;
+    html {
+      @apply cursor-pointer;
     }
 
     /* Ensure text input fields retain their text cursor */
