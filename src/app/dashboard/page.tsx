@@ -14,12 +14,12 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { PlusCircle, Search, FileText, Info, LogOut, UserPlus, LogIn, Loader2 } from "lucide-react"; // Added Loader2
+import { PlusCircle, Search, FileText, Info, LogOut, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-provider";
 import Link from "next/link";
 import { ThemeToggleButton } from "@/components/theme-toggle-button";
-import { useRouter } from "next/navigation"; // For redirect
+import { useRouter } from "next/navigation";
 
 const exampleSnippets: Omit<Snippet, 'id' | 'createdAt'>[] = [
   {
@@ -83,7 +83,6 @@ export default function DashboardPage() {
   const { currentUser, logout, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  // Auth check and redirect
   useEffect(() => {
     if (!authLoading && !currentUser) {
       router.push("/login");
@@ -94,7 +93,6 @@ export default function DashboardPage() {
     return currentUser ? `snippetSphereSnippets_${currentUser.id}` : "snippetSphereSnippets_INVALID_USER";
   };
   
-  // Load snippets from localStorage
   useEffect(() => {
     if (authLoading || !currentUser) return; 
 
@@ -107,7 +105,6 @@ export default function DashboardPage() {
         setSnippets(parsedSnippets);
       } catch (error) {
         console.error("Failed to parse snippets from localStorage", error);
-        // If parsing fails, it might be corrupted, initialize with examples or empty
         const defaultSnips = exampleSnippets.map((s, index) => ({
           ...s,
           id: `example-${index}-${Date.now()}`,
@@ -116,7 +113,6 @@ export default function DashboardPage() {
         setSnippets(defaultSnips);
       }
     } else {
-      // No snippets found for this user, load examples
       const defaultSnips = exampleSnippets.map((s, index) => ({
         ...s,
         id: `example-${index}-${Date.now()}`,
@@ -127,9 +123,8 @@ export default function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading]);
 
-  // Save snippets to localStorage
   useEffect(() => {
-    if (authLoading || !currentUser || snippets.length === 0) return; // Don't save if snippets is empty initially before examples load
+    if (authLoading || !currentUser || snippets.length === 0) return;
     
     const storageKey = getLocalStorageKey();
     localStorage.setItem(storageKey, JSON.stringify(snippets));
@@ -144,7 +139,7 @@ export default function DashboardPage() {
       setSnippets(prev => 
         prev.map(s => 
           s.id === editingSnippet.id 
-          ? { ...s, ...data, tags: snippetTags, language: data.language || "", createdAt: new Date() } 
+          ? { ...s, ...data, tags: snippetTags, language: data.language || "", createdAt: new Date(s.createdAt) } // Keep original creation date on edit
           : s
         )
       );
@@ -241,18 +236,8 @@ export default function DashboardPage() {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-8 sticky top-[calc(var(--header-height,6rem)+1rem)] z-30 bg-background/80 backdrop-blur-sm py-4 -mx-4 px-4">
-          <style jsx global>{`
-            :root {
-              --header-height: ${currentUser && typeof window !== 'undefined' && window.innerWidth < 640 ? 'calc(4rem + 32px + 2rem + 1rem)' : 'calc(4rem + 1rem)'};
-            }
-            @media (min-width: 640px) { /* sm breakpoint */
-              :root {
-                --header-height: calc(4rem + 1rem);
-              }
-            }
-          `}</style>
-          <div className="relative">
+        <div className="mb-8 py-4 -mx-4 px-4 bg-background border-b border-border">
+          <div className="relative container mx-auto"> {/* Added container mx-auto here to align with main content padding */}
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
@@ -321,5 +306,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
