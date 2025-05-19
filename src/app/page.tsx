@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, LogIn, UserPlus, Rocket, Lightbulb } from 'lucide-react';
+import { FileText, LogIn, UserPlus, Lightbulb, Loader2 } from 'lucide-react'; // Added Loader2
 
 export default function LandingPage() {
   const { currentUser, loading } = useAuth();
@@ -83,23 +83,4 @@ export default function LandingPage() {
   );
 }
 
-// Simple loader component for visual feedback
-function Loader2(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-  );
-}
-
+// Removed inline Loader2 SVG component definition
