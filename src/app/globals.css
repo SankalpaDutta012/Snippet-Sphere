@@ -43,7 +43,7 @@ code, pre {
 
     --ring: 210 100% 50%; /* Blue ring */
 
-    --radius: 0.5rem;
+    --radius: 0.25rem; /* Sharper corners for comic panels */
 
     /* Comic Chart Colors - Light Mode */
     --chart-1: 210 100% 50%; /* Blue */
