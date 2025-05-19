@@ -13,97 +13,109 @@ code, pre {
 
 @layer base {
   :root {
-    --background: 40 50% 95%; /* Cream color for light mode */
-    --foreground: 224 71.4% 4.1%; /* Dark Blue/Black */
+    /* Comic Light Mode Theme */
+    --background: 40 100% 97%; /* Very light yellow, "aged paper" */
+    --foreground: 220 20% 15%; /* Very dark blue, "ink" */
 
-    --muted: 220 14.3% 95.9%; /* Light Gray - should still work well */
-    --muted-foreground: 220 8.9% 46.1%; /* Medium Gray */
+    --muted: 40 80% 92%; /* Lighter yellow */
+    --muted-foreground: 220 15% 40%; /* Muted dark blue */
 
-    --popover: 0 0% 100%; /* Popovers can remain white for contrast */
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%; /* White, like a comic panel */
+    --popover-foreground: 220 20% 15%;
 
-    --card: 0 0% 100%; /* Cards can remain white for contrast */
-    --card-foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%; /* White, like a comic panel */
+    --card-foreground: 220 20% 15%;
 
-    --border: 220 13% 91%; /* Light Gray Border */
-    --input: 220 13% 91%; /* Light Gray Input Background */
+    --border: 220 20% 25%; /* Dark blue border */
+    --input: 0 0% 100%; /* White input, dark border */
 
-    --primary: 220.9 39.3% 46.3%; /* Muted Blue */
-    --primary-foreground: 210 20% 98%; /* Very Light Gray/White */
+    --primary: 210 100% 50%; /* Bright comic blue */
+    --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 220 14.3% 95.9%; /* Light Gray */
-    --secondary-foreground: 224 71.4% 4.1%;
+    --secondary: 40 70% 85%; /* Pale yellow */
+    --secondary-foreground: 210 100% 30%; /* Darker blue for contrast */
 
-    --accent: 33 100% 64%; /* #FFB347 - Warm Orange (Existing) */
-    --accent-foreground: 20 90% 15%; /* Darker text for orange accent (Existing) */
+    --accent: 35 100% 55%; /* Bright comic orange/yellow */
+    --accent-foreground: 220 20% 15%; /* Dark ink text on accent */
     
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 80% 55%; /* Classic comic red */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 220.9 39.3% 46.3%; /* Muted Blue for rings */
+    --ring: 210 100% 50%; /* Blue ring */
 
     --radius: 0.5rem;
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Comic Chart Colors - Light Mode */
+    --chart-1: 210 100% 50%; /* Blue */
+    --chart-2: 35 100% 55%;  /* Orange/Yellow */
+    --chart-3: 120 60% 45%; /* Green */
+    --chart-4: 300 70% 50%; /* Purple */
+    --chart-5: 0 80% 55%;   /* Red */
 
-    --sidebar-background: 208 100% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 210 40% 60%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 33 100% 64%;
-    --sidebar-accent-foreground: 20 90% 15%;
-    --sidebar-border: 210 40% 80%;
-    --sidebar-ring: 210 40% 60%;
+    /* Comic Sidebar Colors - Light Mode */
+    --sidebar-background: 40 90% 95%;
+    --sidebar-foreground: 220 20% 20%;
+    --sidebar-primary: 210 100% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 35 100% 50%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 20% 30%;
+    --sidebar-ring: 210 100% 45%;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%; /* Dark Blue/Black */
-    --foreground: 210 20% 98%; /* Very Light Gray/White */
+    /* Comic Dark Mode Theme */
+    --background: 220 20% 10%; /* Very dark blue, "night sky" */
+    --foreground: 40 100% 90%; /* Light yellow, "glowing text" */
 
-    --muted: 215 27.9% 16.9%; /* Darker Gray */
-    --muted-foreground: 217.9 10.6% 64.9%; /* Lighter Medium Gray */
+    --muted: 220 15% 20%; /* Darker muted blue */
+    --muted-foreground: 40 80% 70%; /* Muted light yellow */
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 220 20% 12%;
+    --popover-foreground: 40 100% 90%;
 
-    --card: 224 71.4% 5.5%; /* Slightly lighter than background for card definition */
-    --card-foreground: 210 20% 98%;
+    --card: 220 20% 12%; /* Slightly off-dark-blue for panels */
+    --card-foreground: 40 100% 90%;
 
-    --border: 215 27.9% 16.9%; /* Darker Gray Border */
-    --input: 215 27.9% 16.9%; /* Darker Gray Input Background */
+    --border: 40 100% 70%; /* Light yellow border for contrast */
+    --input: 220 20% 12%;
 
-    --primary: 210 20% 98%; /* Very Light Gray/White for primary elements in dark mode */
-    --primary-foreground: 224 71.4% 4.1%; /* Dark Blue/Black for text on primary */
+    --primary: 35 100% 55%; /* Orange/Yellow becomes primary for pop */
+    --primary-foreground: 220 20% 10%; /* Dark ink text on primary */
     
-    --secondary: 215 27.9% 16.9%; /* Darker Gray */
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 220 15% 25%; /* Another dark blue shade */
+    --secondary-foreground: 35 100% 70%; /* Lighter orange/yellow */
 
-    --accent: 33 100% 64%; /* #FFB347 - Warm Orange (Existing, good contrast) */
-    --accent-foreground: 20 90% 15%; /* Darker text for orange accent (Existing, good contrast) */
+    --accent: 210 100% 60%; /* Bright blue as accent */
+    --accent-foreground: 0 0% 100%; /* White text on blue */
 
-    --destructive: 0 62.8% 30.6%; /* Darker Red */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 50%; /* Slightly deeper red */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 210 20% 98%; /* Light ring for dark mode */
+    --ring: 35 100% 55%; /* Orange/Yellow ring */
+
+    /* Comic Chart Colors - Dark Mode (adjust for contrast if needed) */
+    --chart-1: 210 100% 60%; /* Brighter Blue */
+    --chart-2: 35 100% 65%;  /* Brighter Orange/Yellow */
+    --chart-3: 120 70% 55%; /* Brighter Green */
+    --chart-4: 300 80% 60%; /* Brighter Purple */
+    --chart-5: 0 90% 65%;   /* Brighter Red */
     
-    --sidebar-background: 224 71.4% 5.5%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 210 20% 98%;
-    --sidebar-primary-foreground: 224 71.4% 4.1%;
-    --sidebar-accent: 33 100% 64%;
-    --sidebar-accent-foreground: 20 90% 15%;
-    --sidebar-border: 215 27.9% 16.9%;
-    --sidebar-ring: 210 20% 98%;
+    /* Comic Sidebar Colors - Dark Mode */
+    --sidebar-background: 220 20% 12%;
+    --sidebar-foreground: 40 90% 85%;
+    --sidebar-primary: 35 100% 60%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 210 100% 55%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 40 100% 65%;
+    --sidebar-ring: 35 100% 60%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border border-[1.5px]; /* Thicker default border for comic "inked" style */
   }
   body {
     @apply bg-background text-foreground;
@@ -117,7 +129,7 @@ code, pre {
     @apply cursor-default;
   }
 
-  /* Pointer cursor for desktop, with specific overrides */
+  /* Crosshair cursor for desktop, with specific overrides */
   @media (min-width: 768px) { /* Tailwind 'md' breakpoint is typically 768px */
     html:not(.dark) {
       /* Crosshair cursor with black stroke for light mode */
