@@ -10,6 +10,9 @@ import { ThemeProvider } from '@/hooks/use-theme';
 export const metadata: Metadata = {
   title: 'Snippet Sphere - Code Snippet Manager',
   description: 'Save, tag, search, and manage your code snippets efficiently.',
+  icons: {
+    icon: '/favicon.ico', // This tells Next.js to look for public/favicon.ico
+  },
 };
 
 export default function RootLayout({
