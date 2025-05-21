@@ -186,7 +186,7 @@ export default function SnippetCard({ snippet, onDelete, onEdit }: SnippetCardPr
                 <p className="text-muted-foreground">Generating explanation...</p>
               </div>
             ) : explanation ? (
-                <ScrollArea className="h-auto max-h-[calc(80vh-150px)] w-full rounded-md border p-3 bg-muted/20 shadow-inner">
+                <ScrollArea className="h-full w-full rounded-md border p-3 bg-muted/20 shadow-inner">
                   <pre className="text-sm whitespace-pre-wrap break-words text-foreground">{explanation}</pre>
                 </ScrollArea>
             ) : (
