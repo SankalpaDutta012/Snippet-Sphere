@@ -4,14 +4,14 @@
  * @fileOverview A general purpose AI chatbot flow.
  *
  * - askChatbot - A function that handles a user's question and returns the AI's response.
- * - GeneralChatInputSchema - The input type for the askChatbot function.
- * - GeneralChatOutputSchema - The return type for the askChatbot function.
+ * - GeneralChatInput - The input type for the askChatbot function.
+ * - GeneralChatOutput - The return type for the askChatbot function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GeneralChatInputSchema = z.object({
+const GeneralChatInputSchema = z.object({
   question: z.string().describe('The user question to the chatbot.'),
   chatHistory: z.array(z.object({
     role: z.enum(['user', 'model']),
@@ -20,7 +20,7 @@ export const GeneralChatInputSchema = z.object({
 });
 export type GeneralChatInput = z.infer<typeof GeneralChatInputSchema>;
 
-export const GeneralChatOutputSchema = z.object({
+const GeneralChatOutputSchema = z.object({
   answer: z.string().describe('The chatbot answer to the question.'),
 });
 export type GeneralChatOutput = z.infer<typeof GeneralChatOutputSchema>;
@@ -50,3 +50,4 @@ const generalChatFlow = ai.defineFlow(
 export async function askChatbot(input: GeneralChatInput): Promise<GeneralChatOutput> {
   return generalChatFlow(input);
 }
+
