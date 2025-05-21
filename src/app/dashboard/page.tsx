@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import type { Snippet } from "@/types";
 import SnippetCard from "@/components/snippet-card";
 import SnippetForm from "@/components/snippet-form";
+import ChatbotPopup from "@/components/chatbot-popup"; // Added Chatbot
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -237,7 +238,7 @@ export default function DashboardPage() {
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-8 py-4 -mx-4 px-4 bg-background border-b border-border">
-          <div className="relative container mx-auto"> {/* Added container mx-auto here to align with main content padding */}
+          <div className="relative container mx-auto"> 
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
@@ -299,6 +300,8 @@ export default function DashboardPage() {
           </div>
         </DialogContent>
       </Dialog>
+      
+      {currentUser && <ChatbotPopup />}
 
       <footer className="bg-card border-t py-6 text-center text-sm text-muted-foreground mt-auto">
         <p>&copy; {new Date().getFullYear()} Snippet Sphere. Happy Coding!</p>
