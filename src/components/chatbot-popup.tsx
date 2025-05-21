@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
+  // DialogClose, // Removed: DialogContent already provides one
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -130,10 +130,12 @@ export default function ChatbotPopup() {
             <DialogDescription className="text-xs">
               Ask me anything about coding or Snippet Sphere!
             </DialogDescription>
-            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-              <X className="h-5 w-5" strokeWidth={2.5} />
-              <span className="sr-only">Close</span>
-            </DialogClose>
+            {/* The DialogContent component itself will render its default close button
+                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <X className="h-5 w-5" strokeWidth={2.5} />
+                  <span className="sr-only">Close</span>
+                </DialogClose> 
+            */}
           </DialogHeader>
 
           <ScrollArea className="flex-grow overflow-y-auto h-0 min-h-[200px]" ref={scrollAreaRef}>
