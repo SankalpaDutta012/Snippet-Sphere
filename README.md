@@ -3,3 +3,5 @@ Snippet Sphere is a collaborative platform for storing, sharing, and managing co
 
 website demo:
 https://snippet-sphere.onrender.com
+
+Thank you!
