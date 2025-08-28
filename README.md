@@ -20,8 +20,7 @@ Snippet Sphere is a collaborative platform designed to streamline the storage, s
 
 Experience Snippet Sphere in action! Check out our live demo:
 
-[https://snippet-sphere.onrender.com](https://snippet-sphere.onrender.com)
-
+[https://snippet-sphere-liart.vercel.app/](https://snippet-sphere-liart.vercel.app/)
 ---
 
 ## Getting Started
